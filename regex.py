@@ -8,68 +8,51 @@ import re
 #   MULTILINE - M   -   Multi-line matching (affects ^ and $)
 #   VERBOSE - X     -   'extended' - Allows for things like comments in compile
 
-def matchVal(str, comp):
-    m = comp.match(str)
-    if(m):
-        return m
-    else:
-        return None
-
-def findList(str, comp):
-    list = comp.findall(str)     # find all instances and return as a list
-
-    if(list):
-        return list
-    else:
-        return None
-    
-def iteration(str, comp):
-    iter = comp.finditer(str)       # find all instances and return as a sequence of match object instances as an iterator
-
-    if(iter):
-        return iter
-    else:
-        return None
-
 def menu():
     # separate each sequence of outputs to make it easier to read/define
     separator = ("~"*50)
     basicString = "This is a basic bassic string to test thee the RegEx in Python3. Numbers will also be tested. So 1, 2, ... n many numbers will be tested as well."
-    
-    print(separator, "\nTesting String\n", basicString)
+    emails = "test.tester@hotmail.com alphabeov none of this should be matched person@ilstu.edu Tet-est_@gmail.com gov.g.o.v@edu.gov"
+    print(separator, "\nTesting String\n", emails)
 
-    # basic compiler tests
-    a = re.compile(r"(test)+")      # match 1 or more times     -   equivalent to {1,}
-    b = re.compile(r"bas*ic", re.I)       # match 0 or more times     -   equivalent to {0,}
-    c = re.compile(r"\d")           # match any decimal digit   -   equivalent to [0-9]
-    d = re.compile(r"the?")       # match 0 or 1 times        -   equivalent to {0,1}
-    e = re.compile("[a-z]+")           # match all lowercase letters    -   equivalent to [abcdefghijklmnopqrstuvwxyz]
-    f = re.compile("this", re.I)           # match 'this' regardless of upper/lower case
+    def compileBasic(comp):
+        # basic compiler tests
+        a = re.compile(r"(test)+")      # match 1 or more times     -   equivalent to {1,}
+        b = re.compile(r"bas*ic", re.I)       # match 0 or more times     -   equivalent to {0,}
+        c = re.compile(r"\d")           # match any decimal digit   -   equivalent to [0-9]
+        d = re.compile(r"the?")       # match 0 or 1 times        -   equivalent to {0,1}
+        e = re.compile("[a-z]+")           # match all lowercase letters    -   equivalent to [abcdefghijklmnopqrstuvwxyz]
+        f = re.compile("this", re.I)           # match 'this' regardless of upper/lower case
+        g = re.compile(r"[\w]+")         # all alphanumeric values   -   equivalent to [a-zA-Z0-9_] - without the '+' it would do by character instead of word
+        comp.append(a)
+        comp.append(b)
+        comp.append(c)
+        comp.append(d)
+        comp.append(e)
+        comp.append(f)
+        comp.append(g)
+        return comp
+
+    def compileForEmails(comp):
+        email = re.compile(r"^[\w\$\_]?[\w\$\-\_\.]*@([\w\-]*\.)+[\w]+")
+        comp.append(email)
+        return comp
 
     # Put all compiled RegEx meant to be printed as lists in a single list
-    compiledForLists = []
-    compiledForLists.append(a)
-    compiledForLists.append(b)
-    compiledForLists.append(c)
-    compiledForLists.append(d)
-    compiledForLists.append(e)
-
-    # Put all compiled RegEx meant to find matches in a single list
-    compiledForMatches = []
-    compiledForMatches.append(f)
-
-    # findall
-    print(separator, "\nPrinting lists")
-    count = 1
-    for i in compiledForLists:
-        print(count, ":", findList(basicString, i))
-        count += 1
-
-    print(separator + "\nPrinting match cases")
-    count = 1
-    for i in compiledForMatches:
-        print(count, ":", matchVal(basicString, i))
-        count += 1
+    def findAllBasics(comp):
+        basics = compileBasic(comp)
+        for b in basics:
+            print(b.findall(basicString))
+    
+    def checkEmails(comp):
+        emailCheck = compileForEmails(comp)
+        for e in emailCheck:
+            print((e.match(emails)))
+    
+    # compiled = []
+    # findAllBasics(compiled)
+    compiled = []
+    checkEmails(compiled)
 
 menu()
 
